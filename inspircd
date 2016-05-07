@@ -18,21 +18,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# InspIRCd          Start up the InspIRCd Internet Relay Chat Daemon
+#
+# chkconfig: 2345 55 25
+# description: InspIRCd -- Internet Relay Chat Daemon
+#
+# processname: inspircd
 
 use strict;
 use POSIX;
 use Fcntl;
 
-my $basepath	=	"/opt/inspircd/";
+my $basepath	=	"/opt/inspircd";
 my $confpath	=	"/opt/inspircd/conf/";
 my $binpath	=	"/opt/inspircd/bin";
-my $runpath	=	"/opt/inspircd/";
+my $runpath	=	"/opt/inspircd";
 my $datadir	=       "/opt/inspircd/data";
 my $valgrindlogpath	=	"$basepath/valgrindlogs";
 my $executable	=	"inspircd";
-my $version	=	"InspIRCd-2.0.14(r0)";
-my $uid = "irc";
-my $gid = "irc";
+my $version	=	"InspIRCd-2.0.21(r0)";
+my $uid = "1000";
 
 if ($< == 0 || $> == 0) {
 	if ($uid !~ /^\d+$/) {
@@ -42,22 +47,10 @@ if ($< == 0 || $> == 0) {
 	if (!$uid) {
 		die "Cannot find a valid UID to change to";
 	}
-	if ($gid !~ /^\d+$/) {
-		# Named GID, look it up
-		$gid = getgrnam $gid;
-	}
-	if (!$gid) {
-		die "Cannot find a valid GID to change to";
-	}
 	# drop root if we were configured with an ircd UID
-	$( = $gid;
-	$) = $gid;
 	$< = $uid;
 	$> = $uid;
 	if ($< == 0 || $> == 0) {
-		die "Could not drop root: $!";
-	}
-	if ($( == 0 || $) == 0) {
 		die "Could not drop root: $!";
 	}
 }
